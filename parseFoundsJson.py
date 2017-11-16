@@ -1,15 +1,20 @@
 # encoding: UTF-8
 #
 # 2017-10-25
-import re
 import json
-import os
+from datetime import datetime
+
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import pandas as pd
+
+import commonUtils
 
 
 class parseFoundsJsFile:
     def __init__(self, file):
         self.fileName = file
-
+        self.parsedFoundsData = {}
         self.foundParamsSrcList = ['ishb', 'fS_name', 'fS_code', 'fund_sourceRate', 'fund_Rate', 'fund_minsg',
                                    'stockCodes', 'zqCodes', 'syl_1n', 'syl_6y', 'syl_3y', 'syl_1y',
                                    'Data_fundSharesPositions', 'Data_netWorthTrend', 'Data_ACWorthTrend',
@@ -41,10 +46,18 @@ class parseFoundsJsFile:
                                     'Data_currentFundManager': 'dataCurrentFundManager',
                                     'Data_buySedemption': 'dataBuySedemption',
                                     'swithSameType': 'swithSameType'}
+
         self.foundParams = {}
 
+    def parseMonthMinValue(self, values, dates):
+        minMonthValues = []
+        minMonthDates = []
+        total = len(dates)
+        monthList = commonUtils.getMothList(dates[0], dates[total])
+
+        return minMonthValues, minMonthDates
+
     def openFile(self):
-        self.parsedFoundsData = {}
 
         parsedList = []
         tmpContent = ''
@@ -52,11 +65,11 @@ class parseFoundsJsFile:
         try:
             with open('001186.js', 'r', encoding='utf8') as f:
                 for line in f:
-                    if line!="" :
+                    if line != "":
                         for each in self.foundParamsSrcList:
                             if multLine == True:
                                 tmpContent += line.strip()
-                                tmpContent=tmpContent.replace('\t','')
+                                tmpContent = tmpContent.replace('\t', '')
                                 if line.find(';') != -1:
                                     multLine = False
                                     tmpContent = tmpContent.replace(';', '')
@@ -67,7 +80,7 @@ class parseFoundsJsFile:
                                     # if tmpContent.find(']]')!=-1:
                                     #     tmpContent=tmpContent.replace(']]','}]')
 
-                                    value = self.parseJasonData(tmpContent,line)
+                                    value = self.parseJasonData(tmpContent, line)
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = value
                                 continue
 
@@ -81,7 +94,7 @@ class parseFoundsJsFile:
                                     #     content=content.replace('[[','[{')
                                     # if content.find(']]')!=-1:
                                     #     content=content.replace(']]','}]')
-                                    value = self.parseJasonData(content,line)
+                                    value = self.parseJasonData(content, line)
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = value
                                 else:
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = content
@@ -91,7 +104,7 @@ class parseFoundsJsFile:
                                 parsedList.append(each)
                                 multLine = True
                                 tmpContent += line.split('=')[1].strip()
-                                tmpContent =tmpContent.replace('\t', '')
+                                tmpContent = tmpContent.replace('\t', '')
                                 continue
 
 
@@ -100,7 +113,7 @@ class parseFoundsJsFile:
             print('Open file: %s filed -> ' % self.fileName)
             print(e)
 
-    def parseJasonData(self, dataString,line):
+    def parseJasonData(self, dataString, line):
         print(line)
         try:
 
@@ -112,8 +125,54 @@ class parseFoundsJsFile:
             print(e)
             return
 
+    def getRealTimeAndValue(self, saveFlag=False, fileName=''):
+
+        # show the trend of estmate trend
+        # time stamp :remove the last 3 zeros string
+        values = []
+        times = []
+        flag = False
+        for each in self.parsedFoundsData['dataACWorthTrend']:
+            if each[0] != 1478448000000 and flag == False:
+                continue
+            else:
+                flag = True
+            values.append(each[1])
+            formatTime = datetime.strptime(commonUtils.transUnixTime(int(each[0])), '%Y/%m/%d').date()
+            times.append(formatTime)
+        if saveFlag and fileName != '':
+            dataframe = pd.DataFrame({'date': times, 'value': values})
+            # 将DataFrame存储为csv,index表示是否显示行名，default=True
+            dataframe.to_csv(fileName + ".csv", index=False, sep=' ')
+
+        return times, values
+
+    def showDataNetWorthTrend(self):
+
+        # plt.xlabel('time')
+
+        plt.ylabel('value')
+
+        # 配置横坐标
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m/%d'))
+        plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+
+        plt.title('Pure value trend')
+
+        times, values = self.getRealTimeAndValue()
+
+        plt.plot(times, values, 'r')
+        plt.gcf().autofmt_xdate()  # 自动旋转日期标记
+        plt.legend()
+        plt.show()
+        pass
+        # self.foundParamsDestList['dataNetWorthTrend']=
+
 
 if __name__ == '__main__':
     parser = parseFoundsJsFile('001186.js')
     parser.openFile()
+    parser.getRealTimeAndValue(True, '001186')
     print('parse Finish')
+    parser.showDataNetWorthTrend()
+    # print(commonUtils.transNormalTime('2017-01-12 00:00:00'))
