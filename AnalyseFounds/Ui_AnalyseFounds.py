@@ -6,17 +6,19 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1063, 727)
+        MainWindow.resize(1071, 793)
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralWidget)
-        self.verticalLayout.setObjectName("verticalLayout")
         self.groupBox = QtWidgets.QGroupBox(self.centralWidget)
+        self.groupBox.setEnabled(True)
+        self.groupBox.setGeometry(QtCore.QRect(9, 9, 1053, 661))
+        self.groupBox.setFlat(False)
+        self.groupBox.setCheckable(False)
         self.groupBox.setObjectName("groupBox")
         self.label = QtWidgets.QLabel(self.groupBox)
         self.label.setGeometry(QtCore.QRect(10, 50, 84, 12))
@@ -28,30 +30,29 @@ class Ui_MainWindow(object):
         self.pushButton_5.setGeometry(QtCore.QRect(10, 20, 75, 23))
         self.pushButton_5.setObjectName("pushButton_5")
         self.pushButton = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton.setGeometry(QtCore.QRect(220, 20, 80, 23))
+        self.pushButton.setGeometry(QtCore.QRect(400, 20, 80, 23))
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton_2.setGeometry(QtCore.QRect(350, 20, 80, 23))
+        self.pushButton_2.setGeometry(QtCore.QRect(490, 20, 80, 23))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_3 = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton_3.setGeometry(QtCore.QRect(440, 20, 80, 23))
+        self.pushButton_3.setGeometry(QtCore.QRect(580, 20, 80, 23))
         self.pushButton_3.setObjectName("pushButton_3")
         self.listWidget = QtWidgets.QListWidget(self.groupBox)
-        self.listWidget.setGeometry(QtCore.QRect(10, 70, 1021, 141))
+        self.listWidget.setGeometry(QtCore.QRect(10, 70, 1021, 241))
         self.listWidget.setObjectName("listWidget")
-        self.verticalLayout.addWidget(self.groupBox)
-        self.label_2 = QtWidgets.QLabel(self.centralWidget)
+        self.foundDataWidget = FoundDataWidget(self.groupBox)
+        self.foundDataWidget.setGeometry(QtCore.QRect(10, 350, 1011, 301))
+        self.foundDataWidget.setObjectName("foundDataWidget")
+        self.label_2 = QtWidgets.QLabel(self.groupBox)
+        self.label_2.setGeometry(QtCore.QRect(10, 330, 72, 12))
         self.label_2.setObjectName("label_2")
-        self.verticalLayout.addWidget(self.label_2)
-        self.showFoundDataWidget = QtWidgets.QWidget(self.centralWidget)
-        self.showFoundDataWidget.setObjectName("showFoundDataWidget")
-        self.verticalLayout.addWidget(self.showFoundDataWidget)
+        self.label_3 = QtWidgets.QLabel(self.groupBox)
+        self.label_3.setGeometry(QtCore.QRect(330, 25, 60, 12))
+        self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralWidget)
-        self.toolBar = QtWidgets.QToolBar(MainWindow)
-        self.toolBar.setObjectName("toolBar")
-        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1063, 23))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1071, 23))
         self.menuBar.setObjectName("menuBar")
         self.menu = QtWidgets.QMenu(self.menuBar)
         self.menu.setObjectName("menu")
@@ -63,8 +64,11 @@ class Ui_MainWindow(object):
         self.actionUpdateFoundsDataBase.setObjectName("actionUpdateFoundsDataBase")
         self.actionConfigOptions = QtWidgets.QAction(MainWindow)
         self.actionConfigOptions.setObjectName("actionConfigOptions")
+        self.actionExit = QtWidgets.QAction(MainWindow)
+        self.actionExit.setObjectName("actionExit")
         self.menu.addAction(self.actionUpdateFoundsDataBase)
         self.menu.addAction(self.actionConfigOptions)
+        self.menu.addAction(self.actionExit)
         self.menuBar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -80,11 +84,14 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "分析年度买点"))
         self.pushButton_3.setText(_translate("MainWindow", "分析基金定投"))
         self.label_2.setText(_translate("MainWindow", "基金数据图："))
-        self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
+        self.label_3.setText(_translate("MainWindow", "基金回测："))
         self.menu.setTitle(_translate("MainWindow", "配置"))
         self.actionUpdateFoundsDataBase.setText(_translate("MainWindow", "更新基金数据库"))
         self.actionConfigOptions.setText(_translate("MainWindow", "选项"))
+        self.actionExit.setText(_translate("MainWindow", "退出"))
 
+
+from foundDataWidget import FoundDataWidget
 
 if __name__ == "__main__":
     import sys
