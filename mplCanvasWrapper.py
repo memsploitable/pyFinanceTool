@@ -99,15 +99,10 @@ class MplCanvasWrapper(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.canvas = MplCanvas()
-
         self.vbl = QtWidgets.QVBoxLayout()
-
         self.ntb = NavigationToolbar(self.canvas, parent)
-
         self.vbl.addWidget(self.ntb)
-
         self.vbl.addWidget(self.canvas)
-
         self.setLayout(self.vbl)
 
         self.dataX = []

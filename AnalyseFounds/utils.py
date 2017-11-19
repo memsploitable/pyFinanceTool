@@ -18,44 +18,27 @@
 # import packages
 
 import logging
+import os
+import time
 
+# create file for logging and config it.Then you can log in all the progect
+nowTime = time.strftime("%Y%m%d_%H%M%S")
+logFileName = os.path.join(os.path.abspath('log'), 'main' + nowTime + '.log')  # log file in the log directory
 
-# logging.debug('This is debug message')
-# logging.info('This is info message')
-# logging.warning('This is warning message')
+logger = logging.getLogger('')
+logger.setLevel(logging.DEBUG)
 
-# # founction utils
-# def configLog():
+fmter = logging.Formatter("%(asctime)s-%(levelname)s:%(message)s-[%(filename)s:%(lineno)d]")
 
+filehandler = logging.FileHandler(filename=logFileName, mode='w', encoding="utf-8")
+filehandler.setFormatter(fmter)
 
-# # class utils
-# class utils():
-#     def __init__(self, parent=None):
-#         pass
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(fmter)
 
-def configLogging(logFileName='main.log'):
-    # logging.basicConfig(level=logging.DEBUG,
-    #                     format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-    #                     datefmt='%a, %d %b %Y %H:%M:%S',
-    #                     filename=logFileName,
-    #                     filemode='w')
-
-    logger = logging.getLogger('log')
-    logger.setLevel(logging.DEBUG)
-
-    fmter = logging.Formatter("%(asctime)s-%(name)s-%(levelname)s:%(message)s-[%(filename)s:%(lineno)d]")
-
-    filehandler = logging.FileHandler(filename=logFileName, mode='w', encoding="utf-8")
-    filehandler.setFormatter(fmter)
-
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(fmter)
-
-    logger.addHandler(filehandler)
-    logger.addHandler(console)
-
-    return logger
+logger.addHandler(filehandler)
+logger.addHandler(console)
 
 
 # just for unit test

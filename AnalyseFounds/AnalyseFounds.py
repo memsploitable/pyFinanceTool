@@ -15,10 +15,9 @@
   RunningEnvironment: python 3.5 and above
 """
 
+import logging
 # import packages
-import os
 import sys
-import time
 
 import matplotlib
 from PyQt5.QtWidgets import *
@@ -28,40 +27,48 @@ matplotlib.use('Qt5Agg')
 
 from Ui_AnalyseFounds import Ui_MainWindow
 
-import utils
-
+from ConfigFile import ConfigFile
 
 # class AnalyseFounds
-class AnalyseFounds(Ui_MainWindow):
+class AnalyseFounds(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
-        super(AnalyseFounds, self).__init__()
+        super(AnalyseFounds, self).__init__(parent)
+        self.setupUi(self)
+
         self.initLog()
         self.initConfigFile()
+        self.initEvents()
+        self.initCustomUi()
 
-    def initUi(self):
+    def initEvents(self):
+        self.actionUpdateFoundsDataBase.triggered.connect(self.updateFoundsDataBase)
+
+    def initCustomUi(self):
+
         self.logAndShowStatus('加载完毕')
 
     def initConfigFile(self):
-        pass
+        self.config = ConfigFile()
+        self.config.readConfigParams()
 
     def initLog(self):
-        nowTime = time.strftime("%Y%m%d_%H%M%S")
-        logFileName = os.path.join(os.path.abspath('log'), 'main' + nowTime + '.log')
-        print(logFileName)
-        self.logger = utils.configLogging(logFileName)
-        self.logger.info('logging config over')
+        logging.info('logging config over')
+
+    def updateFoundsDataBase(self):
+        self.getFoundsData()
+        QMessageBox.information(self, "Information", "更新数据库成功!")
+
+    def getFoundsData(self):
+        pass
 
     def logAndShowStatus(self, msg=''):
-        self.statusBar.showMessage(msg)
-        self.logger.info(msg)
+        self.statusTipsBar.showMessage(msg)
+        logging.info(msg)
 
 
 # just for unit test
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    mainWindow = QMainWindow()
-    ui = AnalyseFounds()
-    ui.setupUi(mainWindow)
-    ui.initUi()
+    mainWindow = AnalyseFounds()
     mainWindow.show()
     sys.exit(app.exec_())
