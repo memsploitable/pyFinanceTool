@@ -19,10 +19,11 @@
 import logging
 
 from backports import configparser
+from configobj import ConfigObj
 
 
 # class ConfigFile
-class ConfigFile():
+class ConfigFileUseConfigParser():
     def __init__(self, parent=None):
 
         self.conf = configparser.ConfigParser()
@@ -49,6 +50,28 @@ class ConfigFile():
                 logging.info('read config file success')
         except Exception as e:
             logging.DEBUG(e)
+
+
+class ConfigFile():
+    def __init__(self, fileName='config.ini', parent=None):
+
+        try:
+            self.conf = ConfigObj(fileName)
+        except Exception as e:
+            logging.error(e)
+            logging.error('load config file failed: %s' % fileName)
+
+    def readConfigParams(self):
+        """
+        read config params in config file
+        :return: self.configParamsDit
+        """
+        return self.conf
+
+    def writeConfigParams(self, params, fileName='config.ini'):
+
+        self.conf.filename = fileName
+        self.conf.write()
 
 
 # just for unit test
