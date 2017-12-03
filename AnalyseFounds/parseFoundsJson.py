@@ -2,6 +2,7 @@
 #
 # 2017-10-25
 import json
+import os
 from datetime import datetime
 
 import matplotlib.dates as mdates
@@ -12,8 +13,7 @@ import commonUtils
 
 
 class parseFoundsJsFile:
-    def __init__(self, file):
-        self.fileName = file
+    def __init__(self):
         self.parsedFoundsData = {}
         self.foundParamsSrcList = ['ishb', 'fS_name', 'fS_code', 'fund_sourceRate', 'fund_Rate', 'fund_minsg',
                                    'stockCodes', 'zqCodes', 'syl_1n', 'syl_6y', 'syl_3y', 'syl_1y',
@@ -57,13 +57,14 @@ class parseFoundsJsFile:
 
         return minMonthValues, minMonthDates
 
-    def openFile(self):
+    def openFoundHistoryDataFile(self, foundCode, fileDir='foundJsFile'):
 
         parsedList = []
         tmpContent = ''
         multLine = False
+        fileName = os.path.join(os.path.abspath(fileDir), foundCode + '.js')
         try:
-            with open('001186.js', 'r', encoding='utf8') as f:
+            with open(fileName, 'r', encoding='utf8') as f:
                 for line in f:
                     if line != "":
                         for each in self.foundParamsSrcList:
@@ -110,7 +111,7 @@ class parseFoundsJsFile:
 
 
         except Exception as e:
-            print('Open file: %s filed -> ' % self.fileName)
+            print('Open file: %s filed -> ' % fileName)
             print(e)
 
     def parseJasonData(self, dataString, line):
@@ -125,7 +126,7 @@ class parseFoundsJsFile:
             print(e)
             return
 
-    def getRealTimeAndValue(self, saveFlag=False, fileName=''):
+    def getNatualTimeAndValue(self, saveFlag=False, fileName='', filePath='foundJsFile\\'):
 
         # show the trend of estmate trend
         # time stamp :remove the last 3 zeros string
@@ -159,7 +160,7 @@ class parseFoundsJsFile:
 
         plt.title('Pure value trend')
 
-        times, values = self.getRealTimeAndValue()
+        times, values = self.getNatualTimeAndValue()
 
         plt.plot(times, values, 'r')
         plt.gcf().autofmt_xdate()  # 自动旋转日期标记
@@ -170,9 +171,9 @@ class parseFoundsJsFile:
 
 
 if __name__ == '__main__':
-    parser = parseFoundsJsFile('001186.js')
-    parser.openFile()
-    parser.getRealTimeAndValue(True, '001186')
+    parser = parseFoundsJsFile()
+    parser.openFoundHistoryDataFile(foundCode='001186')
+    parser.getNatualTimeAndValue(True, '001186')
     print('parse Finish')
     parser.showDataNetWorthTrend()
     # print(commonUtils.transNormalTime('2017-01-12 00:00:00'))

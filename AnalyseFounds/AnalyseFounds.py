@@ -20,8 +20,10 @@ import logging
 import sys
 
 import matplotlib
+import tushare as ts
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication
+from sqlalchemy import create_engine
 
 matplotlib.use('Qt5Agg')
 
@@ -41,6 +43,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.initConfigFile()
         self.initEvents()
         self.initCustomUi()
+        self.saveFoundsDataToMySQL()
 
     """
     Bellow functions for the Ui
@@ -75,15 +78,23 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
     def downLoadFoundsDataFromEastMoney(self):
         self.logAndShowStatus('开始从天天基金网获取基金数据，请稍等')
         downLoader = DownLoadFoundsFiles()
-        downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')
-        downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')
-        downLoader.getFoundCompanyListFile(self.configParams['foundDataSource'])
-        downLoader.getFoundCodeListFile(self.configParams['foundDataSource'])
+        downLoader.getFoundCompanyListFile(self.configParams['foundDataSource'])  # 下载基金公司数据
+        downLoader.getFoundCodeListFile(self.configParams['foundDataSource'])  # 下载基金代码列表数据
+        downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金历史数据
+        downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金实时数据
+
 
     def getFoundsDataFromEastMoney(self):
         self.downLoadFoundsDataFromEastMoney()
 
+    def saveFoundsDataToMySQL(self):
+        df = ts.get_tick_data('600848', date='2014-12-22')
+        engine = create_engine('mysql://root:test123$@127.0.0.1/db_name?charset=utf8')
+        # 存入数据库
+        df.to_sql('tick_data', engine)
 
+        # 追加数据到现有表
+        #df.to_sql('tick_data',engine,if_exists='append')
 """
 Bellow functions for the main
 """
