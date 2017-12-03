@@ -22,6 +22,8 @@ import os
 import time
 
 import requests
+from ConfigFile import ConfigFileUseConfigParser
+from sqlalchemy import create_engine
 
 # create file for logging and config it.Then you can log in all the progect
 nowTime = time.strftime("%Y%m%d_%H%M%S")
@@ -115,6 +117,25 @@ class DownLoadFoundsFiles():
         except Exception as e:
             logging.error('download found company code file failed: %s' % fileUrl)
             logging.error(e)
+
+
+class MysqlEngine():
+    def __init__(self, parent=None):
+        self.config = ConfigFileUseConfigParser()
+        self.config.readConfigParams()
+        self.engineLik = 'mysql+pymysql://' + self.config.configParamsDit['dataBase']['user'] + ':' + \
+                         self.config.configParamsDit['dataBase']['password'] + '@' + \
+                         self.config.configParamsDit['dataBase']['host'] + '/'
+        self.engineOptions = '?charset=utf8'
+
+    def createEngine(self, dbName):
+        try:
+            engine = create_engine(self.engineLik + dbName + self.engineOptions)
+            return engine
+        except Exception as e:
+            logging.error('Create mysql engine for %s failed:%s' % (dbName, e))
+            return None
+
 
 # just for unit test
 if __name__ == '__main__':

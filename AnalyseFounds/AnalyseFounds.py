@@ -23,14 +23,13 @@ import matplotlib
 import tushare as ts
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication
-from sqlalchemy import create_engine
 
 matplotlib.use('Qt5Agg')
 
 from Ui_AnalyseFounds import Ui_MainWindow
 
 from ConfigFile import ConfigFile
-from utils import DownLoadFoundsFiles
+from utils import DownLoadFoundsFiles, MysqlEngine
 
 
 # class AnalyseFounds
@@ -43,8 +42,12 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.initConfigFile()
         self.initEvents()
         self.initCustomUi()
+
+        self.dbEngine = MysqlEngine()
+
         self.saveFoundsDataToMySQL()
 
+        self.foundDataWidget.canvas.showFoundTrendData()
     """
     Bellow functions for the Ui
     """
@@ -88,13 +91,13 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.downLoadFoundsDataFromEastMoney()
 
     def saveFoundsDataToMySQL(self):
-        df = ts.get_tick_data('600848', date='2014-12-22')
-        engine = create_engine('mysql://root:test123$@127.0.0.1/db_name?charset=utf8')
+        df = ts.get_hist_data('600519')
+        engine = self.dbEngine.createEngine('db_name')
         # 存入数据库
-        df.to_sql('tick_data', engine)
+        # df.to_sql('tick_data', engine)
 
         # 追加数据到现有表
-        #df.to_sql('tick_data',engine,if_exists='append')
+        df.to_sql('tick_data', engine, if_exists='append')
 """
 Bellow functions for the main
 """

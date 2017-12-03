@@ -45,6 +45,14 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
         self.fig.autofmt_xdate()
 
+    def plot(self, datax, datay, param):
+
+        self.curveObj, = self.ax.plot_date(datax, datay, param)
+
+        self.draw()
+
+    def showFoundTrendData(self, foundCode='001186'):
+
         self.ax.set_title("Pure value trend")
         self.ax.set_xlabel("time of data generator")
 
@@ -54,11 +62,10 @@ class MplCanvas(FigureCanvas):
 
         self.ax.xaxis.set_major_formatter(dates.DateFormatter('%Y/%m/%d'))  # tick label formatter
         self.ax.xaxis.set_minor_locator(dates.MonthLocator())
+        self.parser = parseFoundsJsFile()
+        self.parser.openFoundHistoryDataFile(foundCode)
 
-        self.parser = parseFoundsJsFile('001186.js')
-        self.parser.openFile()
-
-        times, values = self.parser.getRealTimeAndValue()
+        times, values = self.parser.getNatualTimeAndValue()
 
         self.plot(times, values, 'r')
         # self.gcf().autofmt_xdate()  # 自动旋转日期标记
@@ -82,11 +89,6 @@ class MplCanvas(FigureCanvas):
 
         self.ax.legend()
 
-    def plot(self, datax, datay, param):
-
-        self.curveObj, = self.ax.plot_date(datax, datay, param)
-
-        self.draw()
 
 class FoundDataWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):

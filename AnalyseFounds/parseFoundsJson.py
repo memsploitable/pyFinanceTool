@@ -3,6 +3,7 @@
 # 2017-10-25
 import json
 import os
+import re
 from datetime import datetime
 
 import matplotlib.dates as mdates
@@ -48,6 +49,97 @@ class parseFoundsJsFile:
                                     'swithSameType': 'swithSameType'}
 
         self.foundParams = {}
+
+        self.foundRealTimeData = {}
+        self.foundsCodeListData = {}
+        self.foundsCompanyListData = {}
+
+    def parseFoundRealTimeData(self, foundCode, fileDir='foundJsFile'):
+
+        fileName = os.path.join(os.path.abspath(fileDir), foundCode + '_rt.js')
+        content = ''
+        try:
+            with open(fileName, 'r', encoding='utf8') as f:
+                lines = f.readlines()
+
+                for each in lines:
+                    content += each.strip()
+                print(content)
+                f.close()
+        except Exception as e:
+            print('Open file: %s filed -> ' % fileName)
+            print(e)
+        if content != '':
+            try:
+                self.foundRealTimeData = json.loads(re.search('^[^(]*?\((.*)\)[^)]*$', content).group(1))
+            except:
+                raise ValueError('Invalid JSONP')
+        return self.foundRealTimeData
+
+    def parseFoundsCodeListData(self, saveFlag=False, fileDir='foundJsFile'):
+
+        fileName = os.path.join(os.path.abspath(fileDir), 'foundsCodeList.js')
+        content = ''
+        try:
+            with open(fileName, 'r', encoding='utf8') as f:
+                lines = f.readlines()
+
+                for each in lines:
+                    if each.find('=') != -1:
+                        content += each.split('=')[1].strip()
+                    else:
+                        content += each.strip()
+                if content.find(';') != -1:
+                    content = content.replace(';', '')
+                f.close()
+        except Exception as e:
+            print('Open file: %s filed -> ' % fileName)
+            print(e)
+        if content != '':
+            try:
+                tmp = json.loads(content)
+                for each in tmp:
+                    self.foundsCodeListData[each[0]] = each
+                if saveFlag:
+                    json.dump(tmp, open('foundsCodeList', 'w'))
+            except Exception as e:
+                print(e)
+                raise ValueError('Invalid JSONP')
+
+        return self.foundsCodeListData
+
+    def parseFoundsCompanyListData(self, saveFlag=False, fileDir='foundJsFile'):
+
+        fileName = os.path.join(os.path.abspath(fileDir), 'foundsCompanyList.js')
+        content = ''
+        try:
+            with open(fileName, 'r', encoding='utf8') as f:
+                lines = f.readlines()
+
+                for each in lines:
+                    if each.find('op:') != -1:
+                        content += each.split('op:')[1].strip()
+                    else:
+                        content += each.strip()
+                if content.find('}') != -1:
+                    content = content.replace('}', '')
+                print(content)
+                f.close()
+        except Exception as e:
+            print('Open file: %s filed -> ' % fileName)
+            print(e)
+        if content != '':
+            try:
+                tmp = json.loads(content)
+                for each in tmp:
+                    self.foundsCompanyListData[each[0]] = each[1]
+                if saveFlag:
+                    json.dump(tmp, open('foundsCompanyList', 'w'))
+            except Exception as e:
+                print(e)
+                raise ValueError('Invalid JSONP')
+
+        return self.foundsCompanyListData
 
     def parseMonthMinValue(self, values, dates):
         minMonthValues = []
@@ -172,8 +264,11 @@ class parseFoundsJsFile:
 
 if __name__ == '__main__':
     parser = parseFoundsJsFile()
-    parser.openFoundHistoryDataFile(foundCode='001186')
-    parser.getNatualTimeAndValue(True, '001186')
-    print('parse Finish')
-    parser.showDataNetWorthTrend()
+    aa = parser.parseFoundsCompanyListData(saveFlag=True)
+    bb = aa
+    # parser.parseFoundRealTimeData(foundCode='001186')
+    # parser.openFoundHistoryDataFile(foundCode='001186')
+    # parser.getNatualTimeAndValue(True, '001186')
+    # print('parse Finish')
+    # parser.showDataNetWorthTrend()
     # print(commonUtils.transNormalTime('2017-01-12 00:00:00'))
