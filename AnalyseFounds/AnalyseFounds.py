@@ -15,12 +15,13 @@
   RunningEnvironment: python 3.5 and above
 """
 
+import json
 import logging
 # import packages
 import sys
 
 import matplotlib
-import tushare as ts
+import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QApplication
 
@@ -91,13 +92,25 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.downLoadFoundsDataFromEastMoney()
 
     def saveFoundsDataToMySQL(self):
-        df = ts.get_hist_data('600519')
-        engine = self.dbEngine.createEngine('db_name')
-        # 存入数据库
-        # df.to_sql('tick_data', engine)
 
-        # 追加数据到现有表
-        df.to_sql('tick_data', engine, if_exists='append')
+        try:
+            fp = open('foundsCodeList', 'r')
+            df = pd.DataFrame(json.load(fp), columns=['代码', '拼音简称', '名称', '类型', '名称拼音'])
+            fp.close()
+            engine = self.dbEngine.createEngine('foundation_code_Company')
+            df.to_sql('code_list', engine, if_exists='append')
+        except Exception as e:
+            logging.error(e)
+
+        try:
+            fp = open('foundsCompanyList', 'r')
+            df = pd.DataFrame(json.load(fp), columns=['代码', '公司名称'])
+            fp.close()
+            engine = self.dbEngine.createEngine('foundation_code_Company')
+            df.to_sql('company_list', engine, if_exists='append')
+        except Exception as e:
+            logging.error(e)
+
 """
 Bellow functions for the main
 """

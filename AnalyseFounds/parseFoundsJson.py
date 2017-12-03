@@ -101,7 +101,7 @@ class parseFoundsJsFile:
                 for each in tmp:
                     self.foundsCodeListData[each[0]] = each
                 if saveFlag:
-                    json.dump(tmp, open('foundsCodeList', 'w'))
+                    json.dump(tmp, open('foundsCodeList', 'w'), ensure_ascii=True)
             except Exception as e:
                 print(e)
                 raise ValueError('Invalid JSONP')
@@ -134,7 +134,7 @@ class parseFoundsJsFile:
                 for each in tmp:
                     self.foundsCompanyListData[each[0]] = each[1]
                 if saveFlag:
-                    json.dump(tmp, open('foundsCompanyList', 'w'))
+                    json.dump(tmp, open('foundsCompanyList', 'w'), ensure_ascii=True)
             except Exception as e:
                 print(e)
                 raise ValueError('Invalid JSONP')
