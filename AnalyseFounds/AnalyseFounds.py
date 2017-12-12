@@ -31,7 +31,7 @@ from Ui_AnalyseFounds import Ui_MainWindow
 
 from ConfigFile import ConfigFile
 from utils import DownLoadFoundsFiles, MysqlEngine
-
+from SelectFoundForAnalyse import SelectFoundForAnalyse
 
 # class AnalyseFounds
 class AnalyseFounds(QMainWindow, Ui_MainWindow):
@@ -56,6 +56,8 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
     def initEvents(self):
         self.actionUpdateFoundsDataBase.triggered.connect(self.updateFoundsDataBase)
 
+        self.pushSelectFoundButton.clicked.connect(self.selectFoundForAnlayse)
+
     def initCustomUi(self):
         self.logAndShowStatus('加载完毕')
 
@@ -73,6 +75,11 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
     """
     Bellow functions for the analysing
     """
+
+    def selectFoundForAnlayse(self):
+        self.selectDialog = SelectFoundForAnalyse()
+        self.selectDialog.show()
+
 
     def updateFoundsDataBase(self):
         self.getFoundsDataFromEastMoney()
