@@ -32,7 +32,7 @@ from Ui_AnalyseFounds import Ui_MainWindow
 from ConfigFile import ConfigFile
 from utils import DownLoadFoundsFiles, MysqlEngine
 from SelectFoundForAnalyse import SelectFoundForAnalyse
-
+from parseFoundsJson import parseFoundsJsFile
 # class AnalyseFounds
 class AnalyseFounds(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -59,6 +59,10 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.pushSelectFoundButton.clicked.connect(self.selectFoundForAnlayse)
 
     def initCustomUi(self):
+
+        self.tableFoundBasicInfoWidget.setHorizontalHeaderLabels(['参数指标', '信息', '有效范围', '状态'])
+        self.tableAnalysedResultInfoWidget.setHorizontalHeaderLabels(['参数指标', '信息', '有效范围', '状态'])
+
         self.logAndShowStatus('加载完毕')
 
     def initConfigFile(self):
@@ -77,26 +81,74 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
     """
 
     def selectFoundForAnlayse(self):
+        # 加载基金列表选择对话框，选择所需要的基金
         self.selectDialog = SelectFoundForAnalyse()
         self.selectDialog.show()
+        self.selectDialog.selectFish.connect(self.selectFoundForAnlayseFinished)
 
+    def selectFoundForAnlayseFinished(self, code):
+        # 关闭选择对话框并获取选定的基金编码
+        self.foundCodeForAnlayse = code
+        self.lineSelectedFoundCodeEdit.setText(code)
+        self.selectDialog.close()
+        self.downLoadAndParseSelectedFoundData(code)
+
+    def downLoadAndParseSelectedFoundData(self, code):
+
+        downLoader = DownLoadFoundsFiles()
+        downLoader.getFoundFile(self.configParams['foundDataSource'], code)  # 下载指定基金历史数据
+
+        self.parseSelectedFoundData(code)
+
+    def parseSelectedFoundData(self, code):
+
+        parser = parseFoundsJsFile()
+
+        parser.openFoundHistoryDataFile(code)
+        self.foundHistoryData = parser.parsedFoundsData
+
+        self.foudDataToShow = self.foundHistoryData
+
+        self.showSelectedFoundData(self.foudDataToShow)
+
+    def setFoundTableRowValue(self, tableObj, rowNum, content):
+
+        count = len(content)
+        try:
+
+            for i in range(0, count):
+                tableObj.setItem(rowNum, i, QTableWidgetItem(content[i]))
+        except Exception as e:
+            print(e)
+
+    def showSelectedFoundData(self, data):
+
+        rowCount = self.tableFoundBasicInfoWidget.rowCount()
+        columnCount = self.tableFoundBasicInfoWidget.columnCount()
+
+        content = ['基金名称：', data['fsName']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, 0, content)
+
+        pass
 
     def updateFoundsDataBase(self):
-        self.getFoundsDataFromEastMoney()
+        self.getBasicFoundsDataFromEastMoney()
         QMessageBox.information(self, "Information", "更新数据库成功!")
         self.logAndShowStatus("更新数据库成功，可以开始后续分析")
 
-    def downLoadFoundsDataFromEastMoney(self):
+    def getBasicFoundsDataFromEastMoney(self):
+        self.downLoadBasicFoundsDataFromEastMoney()
+
+    def downLoadBasicFoundsDataFromEastMoney(self):
         self.logAndShowStatus('开始从天天基金网获取基金数据，请稍等')
         downLoader = DownLoadFoundsFiles()
         downLoader.getFoundCompanyListFile(self.configParams['foundDataSource'])  # 下载基金公司数据
         downLoader.getFoundCodeListFile(self.configParams['foundDataSource'])  # 下载基金代码列表数据
-        downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金历史数据
-        downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金实时数据
+        # downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金历史数据
+        # downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金实时数据
 
 
-    def getFoundsDataFromEastMoney(self):
-        self.downLoadFoundsDataFromEastMoney()
+
 
     def saveFoundsDataToMySQL(self):
 

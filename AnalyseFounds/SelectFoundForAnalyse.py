@@ -38,6 +38,9 @@ class WorkThread(QThread):
         super(WorkThread, self).__init__(parent)
 
         self.configure = config
+        self.selectCode = ""
+
+
 
     def run(self):
 
@@ -77,18 +80,27 @@ class WorkThread(QThread):
 
 # class SelectFoundForAnalyse
 class SelectFoundForAnalyse(QDialog, Ui_FoundsCodeListDialog):
+    selectFish = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(SelectFoundForAnalyse, self).__init__(parent)
         self.setupUi(self)
         self.config = ConfigFileUseConfigParser()
         self.config.readConfigParams()
         self.pushConfirmSelectedCodeButton.clicked.connect(self.confirmSelectedCode)
+        self.getCodeListFromSql()
 
     def confirmSelectedCode(self):
-
+        # 确认选择的基金编码
         list = self.foundCodeListWidget.currentItem().text()
+        self.selectCode = list.split(':')[0]
+        reply = QMessageBox.question(self, '确认', "已选择了一只基金：%s，是否确认选择" % list, QMessageBox.Yes, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.selectFish.emit(self.selectCode)
+        else:
+            pass
 
-        QMessageBox.information(self, "Information", "已选择了一只基金：%s" % list)
+
 
     def getCodeListFromSql(self):
 
