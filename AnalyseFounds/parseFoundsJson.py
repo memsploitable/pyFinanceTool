@@ -64,7 +64,7 @@ class parseFoundsJsFile:
 
                 for each in lines:
                     content += each.strip()
-                print(content)
+                # print(content)
                 f.close()
         except Exception as e:
             print('Open file: %s filed -> ' % fileName)
@@ -123,7 +123,7 @@ class parseFoundsJsFile:
                         content += each.strip()
                 if content.find('}') != -1:
                     content = content.replace('}', '')
-                print(content)
+                # print(content)
                 f.close()
         except Exception as e:
             print('Open file: %s filed -> ' % fileName)
@@ -178,11 +178,12 @@ class parseFoundsJsFile:
                                 continue
 
                             if each not in parsedList and line.find(each) != -1 and line.find(';') != -1:
-                                content = line.split('=')[1].strip()
+                                content = line.split('=')[1].strip()  # 获取=号后的值
+
                                 parsedList.append(each)
                                 content = content.replace('\t', '')
                                 content = content.replace(';', '')
-                                if content.find('[') != -1:
+                                if content.find('[') != -1:  # 出来Jason格式的值
                                     # if content.find('[[')!=-1:
                                     #     content=content.replace('[[','[{')
                                     # if content.find(']]')!=-1:
@@ -190,6 +191,9 @@ class parseFoundsJsFile:
                                     value = self.parseJasonData(content, line)
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = value
                                 else:
+                                    if content.find('"') != -1:
+                                        print(content)
+                                        content = eval(content)
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = content
                                 continue
 
@@ -207,7 +211,7 @@ class parseFoundsJsFile:
             print(e)
 
     def parseJasonData(self, dataString, line):
-        print(line)
+        # print(line)
         try:
 
             s = json.loads(dataString)

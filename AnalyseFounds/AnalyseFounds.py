@@ -66,13 +66,26 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.logAndShowStatus('加载完毕')
 
     def initConfigFile(self):
+        """
+        初始化配置文件
+        :return:
+        """
         config = ConfigFile()
         self.configParams = config.readConfigParams()
 
     def initLog(self):
+        """
+        初始化log配置
+        :return:
+        """
         logging.info('logging config over')
 
     def logAndShowStatus(self, msg=''):
+        """
+        记录日志并显示信息到状态栏上
+        :param msg: 日志信息
+        :return:
+        """
         self.statusTipsBar.showMessage(msg)
         logging.info(msg)
 
@@ -101,18 +114,27 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.parseSelectedFoundData(code)
 
     def parseSelectedFoundData(self, code):
+        """
+
+        :param code: 选定的基金代码
+        :return: None
+        """
 
         parser = parseFoundsJsFile()
 
-        parser.openFoundHistoryDataFile(code)
-        self.foundHistoryData = parser.parsedFoundsData
+        parser.openFoundHistoryDataFile(code)  # 根据下载到的基金js文件解析基金相信信息
+        self.foundHistoryData = parser.parsedFoundsData  # 获得解析到的基金数据信息
+        # self.foudDataToShow = self.foundHistoryData
 
-        self.foudDataToShow = self.foundHistoryData
-
-        self.showSelectedFoundData(self.foudDataToShow)
+        self.showSelectedFoundData(self.foundHistoryData)
 
     def setFoundTableRowValue(self, tableObj, rowNum, content):
-
+        """
+        #设置基金数据表格行数据
+        tableObj:表对象
+        rowNum:行序号
+        content:行内容列表，最多只显示表格列数内容
+        """
         count = len(content)
         try:
 
@@ -122,14 +144,37 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             print(e)
 
     def showSelectedFoundData(self, data):
+        """
 
+        :param data: 显示的指定基金js数据详情
+        :return: None
+        """
+
+        # 显示指定的基金详细信息
         rowCount = self.tableFoundBasicInfoWidget.rowCount()
         columnCount = self.tableFoundBasicInfoWidget.columnCount()
 
+        # 显示基金名称信息
+        index = 0
         content = ['基金名称：', data['fsName']]
-        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, 0, content)
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
+        index += 1
+        content = ['基金类型：', data['fsName']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
 
-        pass
+        content = ['近一月收益率：', data['syl1y']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
+        index += 1
+        content = ['近三月收益率：', data['syl3y']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
+        index += 1
+        content = ['近6月收益率：', data['syl6y']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
+        index += 1
+        content = ['近一年收益率：', data['syl1n']]
+        self.setFoundTableRowValue(self.tableFoundBasicInfoWidget, index, content)
+        index += 1
+
 
     def updateFoundsDataBase(self):
         self.getBasicFoundsDataFromEastMoney()
