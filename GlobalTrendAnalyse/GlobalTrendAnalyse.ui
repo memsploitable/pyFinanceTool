@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>GlobalTrendAnalyse</class>
+    <widget class="QMainWindow" name="GlobalTrendAnalyse">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1216</width>
+                <height>882</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>GlobalTrendAnalyse</string>
+        </property>
+        <widget class="QWidget" name="centralWidget">
+            <widget class="QLabel" name="label">
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>60</y>
+                        <width>90</width>
+                        <height>12</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>GlobalTrendData</string>
+                </property>
+            </widget>
+        </widget>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>
