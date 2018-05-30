@@ -230,7 +230,7 @@ class parseFoundsJsFile:
         times = []
         flag = False
         for each in self.parsedFoundsData['dataACWorthTrend']:
-            if each[0] != 1478448000000 and flag == False:
+            if each[0] != 1430841600000 and flag == False:
                 continue
             else:
                 flag = True
@@ -240,7 +240,7 @@ class parseFoundsJsFile:
         if saveFlag and fileName != '':
             dataframe = pd.DataFrame({'date': times, 'value': values})
             # 将DataFrame存储为csv,index表示是否显示行名，default=True
-            dataframe.to_csv(fileName + ".csv", index=False, sep=' ')
+            dataframe.to_csv(fileName + ".csv", index=False, sep=',')
 
         return times, values
 
@@ -270,9 +270,9 @@ if __name__ == '__main__':
     parser = parseFoundsJsFile()
     aa = parser.parseFoundsCompanyListData(saveFlag=True)
     bb = aa
-    # parser.parseFoundRealTimeData(foundCode='001186')
-    # parser.openFoundHistoryDataFile(foundCode='001186')
-    # parser.getNatualTimeAndValue(True, '001186')
+    parser.parseFoundRealTimeData(foundCode='001186')
+    parser.openFoundHistoryDataFile(foundCode='001186')
+    parser.getNatualTimeAndValue(True, '001186')
     # print('parse Finish')
-    # parser.showDataNetWorthTrend()
+    parser.showDataNetWorthTrend()
     # print(commonUtils.transNormalTime('2017-01-12 00:00:00'))

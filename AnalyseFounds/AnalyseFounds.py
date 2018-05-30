@@ -55,7 +55,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
     def initEvents(self):
         self.actionUpdateFoundsDataBase.triggered.connect(self.updateFoundsDataBase)
-
+        self.downLoadAndParseSelectedFoundData('001186')
         self.pushSelectFoundButton.clicked.connect(self.selectFoundForAnlayse)
 
     def initCustomUi(self):
@@ -188,8 +188,8 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.logAndShowStatus('开始从天天基金网获取基金数据，请稍等')
         downLoader = DownLoadFoundsFiles()
         downLoader.getFoundCompanyListFile(self.configParams['foundDataSource'])  # 下载基金公司数据
-        downLoader.getFoundCodeListFile(self.configParams['foundDataSource'])  # 下载基金代码列表数据
-        # downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金历史数据
+        # downLoader.getFoundCodeListFile(self.configParams['foundDataSource'])  # 下载基金代码列表数据
+        downLoader.getFoundFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金历史数据
         # downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金实时数据
 
 
