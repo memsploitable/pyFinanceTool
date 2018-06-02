@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from parseFoundsJson import parseFoundsJsFile
 
 
 def automatic_investment_plan(index_code, start_date, end_date, periodMoney):
@@ -52,28 +53,38 @@ def automatic_investment_plan(index_code, start_date, end_date, periodMoney):
     return daily_data
 
 
-# 运行程序
-# df = automatic_investment_plan('sh000001', '2013-01-04', '2014-12-31')
-foundNum = '001186'
-df = automatic_investment_plan('001186', '2015-05-05', '2018-05-29', 1000)
+if __name__ == '__main__':
+    parser = parseFoundsJsFile()
 
-# 收益率统计
-print(df[['累计定投资金', '基金定投资金', '理财定投资金']].iloc[[0, -1],])
-print
+    foundCode = '110022'
+    aa = parser.parseFoundsCompanyListData(saveFlag=True, fileDir='.')
+    parser.parseFoundRealTimeData(foundCode, fileDir='.')
+    parser.openFoundHistoryDataFile(foundCode, fileDir='.')
+    parser.getNatualTimeAndValue(True, foundCode)
 
-temp = (df['基金定投资金'] / df['理财定投资金'] - 1).sort_values()
-print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
-print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
+    # 运行程序
+    # df = automatic_investment_plan('sh000001', '2013-01-04', '2014-12-31')
+    foundNum = '110022'
+    df = automatic_investment_plan(foundCode, '2016-05-29', '2018-05-29', 1000)
 
-print("到期基金定投收益: %.2f 元，日期为%s" % (
-df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
-print("到期理财产品收益: %.2f 元，日期为%s" % (
-df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
-print("到期基金净值涨幅： %.2f %% ，日期为%s" % (((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100, str(temp.index[-1])))
+    # 收益率统计
+    print(df[['累计定投资金', '基金定投资金', '理财定投资金']].iloc[[0, -1],])
+    print
 
-df[['基金定投资金', '理财定投资金']].plot(figsize=(12, 6))
-df['value'].plot(secondary_y=True)
+    temp = (df['基金定投资金'] / df['理财定投资金'] - 1).sort_values()
+    print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
+    print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
 
-plt.legend([foundNum + ' 基金净值'], loc='upper right')  # 绘制指数当天收盘点位
-# plt.legend(['上证基金指数'], loc='best') #绘制指数当天收盘点位
-plt.show()
+    print("到期基金定投收益: %.2f 元，日期为%s" % (
+        df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
+    print("到期理财产品收益: %.2f 元，日期为%s" % (
+        df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
+    print(
+        "到期基金净值涨幅： %.2f %% ，日期为%s" % (((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100, str(temp.index[-1])))
+
+    df[['基金定投资金', '理财定投资金']].plot(figsize=(12, 6))
+    df['value'].plot(secondary_y=True)
+
+    plt.legend([foundNum + ' 基金净值'], loc='upper right')  # 绘制指数当天收盘点位
+    # plt.legend(['上证基金指数'], loc='best') #绘制指数当天收盘点位
+    plt.show()

@@ -32,6 +32,7 @@ contentList = []
 
 
 class WorkThread(QThread):
+    # 后台链接数据库并从数据库读取基金数据
     trigger = pyqtSignal()
 
     def __init__(self, config, parent):
@@ -40,12 +41,10 @@ class WorkThread(QThread):
         self.configure = config
         self.selectCode = ""
 
-
-
     def run(self):
 
         try:
-            ctypes.windll.LoadLibrary('M:/QuantSoft/mysql-5.7.20-winx64/mysql-5.7.20-winx64/lib/libmysql.dll')
+            ctypes.windll.LoadLibrary('K:/mysql-5.7.20-winx64/lib/libmysql.dll')
 
             if sql.QSqlDatabase.isDriverAvailable('QMYSQL'):
                 db = sql.QSqlDatabase.addDatabase('QMYSQL')
@@ -113,6 +112,7 @@ class SelectFoundForAnalyse(QDialog, Ui_FoundsCodeListDialog):
     def refreshListWidget(self):
 
         for each in contentList:
+            print(each)
             self.foundCodeListWidget.addItem(each)
         self.labelStatus.setText("加载数据完成，请选择一只需要分析的基金并单击OK按钮...")
 

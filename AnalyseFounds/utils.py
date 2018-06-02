@@ -51,7 +51,7 @@ class DownLoadFoundsFiles():
         self.fileDirectory = 'foundJsFile'
 
     def getFoundFile(self, foundDataSource, foundCode):
-
+        # 下载并保存基金js文件
         fileName = foundCode + '.js'
         fileUrl = foundDataSource['foundDetailUrl'] + fileName
         filePath = os.path.join(os.path.abspath(self.fileDirectory), fileName)

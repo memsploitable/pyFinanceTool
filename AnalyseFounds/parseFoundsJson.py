@@ -222,7 +222,7 @@ class parseFoundsJsFile:
             print(e)
             return
 
-    def getNatualTimeAndValue(self, saveFlag=False, fileName='', filePath='foundJsFile\\'):
+    def getNatualTimeAndValue(self, saveFlag=False, fileName='', fileDir='.'):
 
         # show the trend of estmate trend
         # time stamp :remove the last 3 zeros string
@@ -240,7 +240,8 @@ class parseFoundsJsFile:
         if saveFlag and fileName != '':
             dataframe = pd.DataFrame({'date': times, 'value': values})
             # 将DataFrame存储为csv,index表示是否显示行名，default=True
-            dataframe.to_csv(fileName + ".csv", index=False, sep=',')
+            fileName = os.path.join(os.path.abspath(fileDir), fileName + '.csv')
+            dataframe.to_csv(fileName, index=False, sep=',')
 
         return times, values
 
@@ -270,9 +271,9 @@ if __name__ == '__main__':
     parser = parseFoundsJsFile()
     aa = parser.parseFoundsCompanyListData(saveFlag=True)
     bb = aa
-    parser.parseFoundRealTimeData(foundCode='001186')
-    parser.openFoundHistoryDataFile(foundCode='001186')
-    parser.getNatualTimeAndValue(True, '001186')
+    # parser.parseFoundRealTimeData(foundCode='000001')
+    parser.openFoundHistoryDataFile(foundCode='000001')
+    parser.getNatualTimeAndValue(True, '000001')
     # print('parse Finish')
     parser.showDataNetWorthTrend()
     # print(commonUtils.transNormalTime('2017-01-12 00:00:00'))
