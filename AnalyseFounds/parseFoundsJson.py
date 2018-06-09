@@ -230,10 +230,11 @@ class parseFoundsJsFile:
         times = []
         flag = False
         for each in self.parsedFoundsData['dataACWorthTrend']:
-            if each[0] != 1430841600000 and flag == False:
-                continue
-            else:
-                flag = True
+            # if each[0] != 1430841600000 and flag == False:
+            # # if  flag == False:
+            #     continue
+            # else:
+            #     flag = True
             values.append(each[1])
             formatTime = datetime.strptime(commonUtils.transUnixTime(int(each[0])), '%Y/%m/%d').date()
             times.append(formatTime)
