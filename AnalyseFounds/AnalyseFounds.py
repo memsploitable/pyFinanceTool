@@ -42,6 +42,10 @@ from parseFoundsJson import parseFoundsJsFile
 from ConfigFile import ConfigFileUseConfigParser
 from time import sleep
 
+import datetime
+
+from xlwt import Workbook
+
 global contentListGlobal
 contentListGlobal = []
 
@@ -233,34 +237,77 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
     def analyseAllFoudsDataFromCsv(self, list):
 
-        for code in list:
-            # try:
+        book = Workbook()
+        sheet1 = book.add_sheet('list')
 
-            investDays = ['first', 'median', 'last', 'min', 'max']
+        # 写表头
+        title = ['基金号', '定投方式', '定投周期', '开始定投时间', '结束定投时间', '定投金额', '累计定投本金', '基金定投资金额', '理财定投资金额', '最差基准亏损', '最佳定投盈利',
+                 '基金定投收益', '',
+                 '理财产品收益', '到期基金净值涨幅', '基金定投收益率', '定投时长']
+
+        col = 0
+        for item in title:
+
+            sheet1.write(0, col, item)
+            col += 1
+
+        col = 0
+        row = 1
+        investDays = ['first', 'median', 'last', 'min', 'max']
+        investPeriod = '15D'  # 两周投一次
+        investMoney = 1000
+        for code in list:
+
             roiList = []
-            tmp = []
-            investPeriod = '15D'  # 两周投一次
+            # tmp = []
+
             for each in investDays:
 
                 print('开始评估基金:%s的定投月份的%s 时间' % (code, each))
+                sheet1.write(row, 0, code)
+                sheet1.write(row, 1, each)
+                sheet1.write(row, 2, investPeriod)
 
-                df = self.automatic_investment_plan(code, '', '', 1000, 'csvFile//', investPeriod, each)
+                df, start_date, end_date = self.automatic_investment_plan(code, '', '', investMoney, 'csvFile//',
+                                                                          investPeriod, each)
+                sheet1.write(row, 3, start_date.strftime('%Y-%m-%d'))
+                sheet1.write(row, 4, end_date.strftime('%Y-%m-%d'))
+
+
 
                 # 收益率统计
                 print(df[['累计定投资金', '基金定投资金', '理财定投资金']].iloc[[0, -1],])
                 print
 
+                sheet1.write(row, 5, investMoney)
+                # sheet1.write(row, 6, df[['累计定投资金']].iloc[[-1],].values[0][0])
+                sheet1.write(row, 7, df[['基金定投资金']].iloc[[-1],].values[0][0])
+                sheet1.write(row, 8, df[['理财定投资金']].iloc[[-1],].values[0][0])
+
+
                 temp = (df['基金定投资金'] / df['理财定投资金'] - 1).sort_values()
                 print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
                 print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
+                sheet1.write(row, 9, temp.iloc[0] * 100)
+                sheet1.write(row, 10, temp.iloc[-1] * 100)
 
+                tmp = df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']
                 print("到期基金定投收益: %.2f 元，日期为%s" % (
-                    df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
+                    tmp, str(temp.index[-1])))
+                sheet1.write(row, 11, tmp)
+
+                tmp = df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']
                 print("到期理财产品收益: %.2f 元，日期为%s" % (
-                    df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
+                    tmp, str(temp.index[-1])))
+                sheet1.write(row, 12, tmp)
+
+                tmp = ((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100
                 print(
-                    "到期基金净值涨幅： %.2f %% ，日期为%s" % (
-                        ((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100, str(temp.index[-1])))
+                    "到期基金净值涨幅： %.2f %% ，日期为%s" % (tmp
+                                                  , str(temp.index[-1])))
+
+                sheet1.write(row, 13, tmp)
+
 
                 getROI = ((df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']) /
                           df[['累计定投资金']].iloc[-1]['累计定投资金']) * 100
@@ -268,10 +315,15 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
                 roiList.append(getROI)
 
+                days = str((end_date - start_date).strftime('%Y-%m-%d'))
                 print(
                     "基金:%s 到期基金理财收益率： %.2f %% ，日期为%s ，累计投资时长: %s" % (code,
                                                                      getROI, str(temp.index[-1]),
-                                                                     str(temp.index[-1] - temp.index[0])))
+                                                                     days))
+                tmp = '%.2f %%' % getROI
+                sheet1.write(row, 14, tmp)
+                sheet1.write(row, 15, days)
+
 
                 df[['基金定投资金', '理财定投资金']].plot(figsize=(12, 6))
                 df['value'].plot(secondary_y=True)
@@ -280,38 +332,13 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
                 # plt.legend(['上证基金指数'], loc='best') #绘制指数当天收盘点位
                 # plt.show()
 
+                row += 1
+
             print(max(roiList))
 
-            #
-            # df = self.automatic_investment_plan(each, '', '', 1000, 'csvFile//')
-            #
-            # # 收益率统计
-            # print(df[['累计定投资金', '基金定投资金', '理财定投资金']].iloc[[0, -1],])
-            # print
-            #
-            # temp = (df['基金定投资金'] / df['理财定投资金'] - 1).sort_values()
-            # print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
-            # print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
-            #
-            # # TODO 需要检查结果
-            # print("到期基金定投收益: %.2f 元，日期为%s" % (
-            #     df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
-            # print("到期理财产品收益: %.2f 元，日期为%s" % (
-            #     df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金'], str(temp.index[-1])))
-            # print("到期基金净值涨幅： %.2f %% ，日期为%s" % (
-            #     ((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100, str(temp.index[-1])))
-            #
-            # df[['基金定投资金', '理财定投资金']].plot(figsize=(12, 6))
-            # df['value'].plot(secondary_y=True)
-            #
-            # plt.legend([each + ' 基金净值'], loc='upper right')  # 绘制指数当天收盘点位
-            # # plt.legend(['上证基金指数'], loc='best') #绘制指数当天收盘点位
-            # plt.show()
-
-        # except Exception as e:
-        #     print(e)
-        #     print('分析：%s 基金文件失败，请检查' % each)
-        #     continue
+        nowTime = datetime.datetime.now().strftime('%Y-%m-%d%H%M%S')
+        fileName = 'result_%s.xls' % nowTime
+        book.save(fileName)
 
     def automatic_investment_plan(Self, index_code, start_date, end_date, periodMoney, fileDir='.', investPeriod='M',
                                   investDay='first'):
@@ -372,7 +399,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         # daily_data['基金定投资金'] = daily_data['value'] / 1000 * daily_data['总基金份额']
         daily_data['理财定投资金'] = daily_data['无风险收益_净值'] * daily_data['总理财份额']
 
-        return daily_data
+        return daily_data, start_date, end_date
 
     def selectFoundForAnlayse(self):
         # 加载基金列表选择对话框，选择所需要的基金
