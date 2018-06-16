@@ -241,9 +241,9 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         sheet1 = book.add_sheet('list')
 
         # 写表头
-        title = ['基金号', '定投方式', '定投周期', '开始定投时间', '结束定投时间', '定投金额', '累计定投本金', '基金定投资金额', '理财定投资金额', '最差基准亏损', '最佳定投盈利',
-                 '基金定投收益', '',
-                 '理财产品收益', '到期基金净值涨幅', '基金定投收益率', '定投时长']
+        title = ['基金号', '定投方式', '定投周期', '开始定投时间', '结束定投时间', '定投金额', '累计定投本金', '基金定投本息', '理财定投本息', '最差基准亏损', '最佳定投盈利',
+                 '基金定投收益',
+                 '理财产品收益', '到期基金净值涨幅', '理财定投收益率', '基金定投收益率', '定投时长（天）']
 
         col = 0
         for item in title:
@@ -273,30 +273,27 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
                 sheet1.write(row, 3, start_date.strftime('%Y-%m-%d'))
                 sheet1.write(row, 4, end_date.strftime('%Y-%m-%d'))
 
-
-
                 # 收益率统计
-                print(df[['累计定投资金', '基金定投资金', '理财定投资金']].iloc[[0, -1],])
+                print(df[['累计定投本金', '基金定投本息', '理财定投本息']].iloc[[0, -1],])
                 print
 
                 sheet1.write(row, 5, investMoney)
-                # sheet1.write(row, 6, df[['累计定投资金']].iloc[[-1],].values[0][0])
-                sheet1.write(row, 7, df[['基金定投资金']].iloc[[-1],].values[0][0])
-                sheet1.write(row, 8, df[['理财定投资金']].iloc[[-1],].values[0][0])
+                sheet1.write(row, 6, int(df[['累计定投本金']].iloc[[-1],].values[0][0]))
+                sheet1.write(row, 7, df[['基金定投本息']].iloc[[-1],].values[0][0])
+                sheet1.write(row, 8, df[['理财定投本息']].iloc[[-1],].values[0][0])
 
-
-                temp = (df['基金定投资金'] / df['理财定投资金'] - 1).sort_values()
+                temp = (df['基金定投本息'] / df['理财定投本息'] - 1).sort_values()
                 print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
                 print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
                 sheet1.write(row, 9, temp.iloc[0] * 100)
                 sheet1.write(row, 10, temp.iloc[-1] * 100)
 
-                tmp = df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']
+                tmp = df[['基金定投本息']].iloc[-1]['基金定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']
                 print("到期基金定投收益: %.2f 元，日期为%s" % (
                     tmp, str(temp.index[-1])))
                 sheet1.write(row, 11, tmp)
 
-                tmp = df[['理财定投资金']].iloc[-1]['理财定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']
+                tmp = df[['理财定投本息']].iloc[-1]['理财定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']
                 print("到期理财产品收益: %.2f 元，日期为%s" % (
                     tmp, str(temp.index[-1])))
                 sheet1.write(row, 12, tmp)
@@ -306,26 +303,28 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
                     "到期基金净值涨幅： %.2f %% ，日期为%s" % (tmp
                                                   , str(temp.index[-1])))
 
-                sheet1.write(row, 13, tmp)
+                sheet1.write(row, 13, '%.2f %%' % (tmp))
 
+                tmp = '%.2f %%' % (((df[['理财定投本息']].iloc[-1]['理财定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']) /
+                                    df[['累计定投本金']].iloc[-1]['累计定投本金']) * 100)
+                sheet1.write(row, 14, tmp)
 
-                getROI = ((df[['基金定投资金']].iloc[-1]['基金定投资金'] - df[['累计定投资金']].iloc[-1]['累计定投资金']) /
-                          df[['累计定投资金']].iloc[-1]['累计定投资金']) * 100
+                getROI = ((df[['基金定投本息']].iloc[-1]['基金定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']) /
+                          df[['累计定投本金']].iloc[-1]['累计定投本金']) * 100
                 # tmp[each]=getROI
 
                 roiList.append(getROI)
 
-                days = str((end_date - start_date).strftime('%Y-%m-%d'))
+                days = str((end_date - start_date).days)
                 print(
                     "基金:%s 到期基金理财收益率： %.2f %% ，日期为%s ，累计投资时长: %s" % (code,
                                                                      getROI, str(temp.index[-1]),
                                                                      days))
                 tmp = '%.2f %%' % getROI
-                sheet1.write(row, 14, tmp)
-                sheet1.write(row, 15, days)
+                sheet1.write(row, 15, tmp)
+                sheet1.write(row, 16, days)
 
-
-                df[['基金定投资金', '理财定投资金']].plot(figsize=(12, 6))
+                df[['基金定投本息', '理财定投本息']].plot(figsize=(12, 6))
                 df['value'].plot(secondary_y=True)
 
                 plt.legend([code + ' 基金净值'], loc='upper right')  # 绘制指数当天收盘点位
@@ -384,7 +383,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         trade_log['基金份额'] = trade_log['money'] / trade_log['基金净值']  # 当月的申购份额
         trade_log['总基金份额'] = trade_log['基金份额'].cumsum()  # 累积申购份额
-        trade_log['累计定投资金'] = trade_log['money'].cumsum()  # 累积投入的资金
+        trade_log['累计定投本金'] = trade_log['money'].cumsum()  # 累积投入的资金
 
         # 定投购买余额宝等无风险产品
         trade_log['理财份额'] = trade_log['money'] / by_month['无风险收益_净值']  # 当月的申购份额
@@ -394,10 +393,10 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         index_data = index_data.to_period('D')
 
         # 计算每个交易日的资产（等于当天的基金份额乘以单位基金净值）
-        daily_data = pd.concat([index_data, temp[['总基金份额', '总理财份额', '累计定投资金']]], axis=1, join='inner')
-        daily_data['基金定投资金'] = daily_data['value'] * daily_data['总基金份额']
-        # daily_data['基金定投资金'] = daily_data['value'] / 1000 * daily_data['总基金份额']
-        daily_data['理财定投资金'] = daily_data['无风险收益_净值'] * daily_data['总理财份额']
+        daily_data = pd.concat([index_data, temp[['总基金份额', '总理财份额', '累计定投本金']]], axis=1, join='inner')
+        daily_data['基金定投本息'] = daily_data['value'] * daily_data['总基金份额']
+        # daily_data['基金定投本息'] = daily_data['value'] / 1000 * daily_data['总基金份额']
+        daily_data['理财定投本息'] = daily_data['无风险收益_净值'] * daily_data['总理财份额']
 
         return daily_data, start_date, end_date
 
