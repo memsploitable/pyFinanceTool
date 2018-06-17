@@ -4,6 +4,12 @@
     <list default="true" id="ba3f1a8f-61ba-45b0-8667-9eeb127fefb2" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py" afterPath="$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/000001.js" afterPath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/000001.js" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/001186.js" afterPath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/001186.js" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/001186_rt.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/foundsCodeList.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/foundJsFile/foundsCompanyList.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py" afterPath="$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +23,8 @@
       <file leaf-file-name="AnalyseFounds.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
-              <caret line="307" column="35" lean-forward="true" selection-start-line="307" selection-start-column="35" selection-end-line="307" selection-end-column="35" />
+            <state relative-caret-position="253">
+              <caret line="215" column="52" lean-forward="false" selection-start-line="215" selection-start-column="52" selection-end-line="215" selection-end-column="52" />
               <folding>
                 <element signature="e#211#222#0" expanded="true" />
               </folding>
@@ -26,11 +32,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Row.py" pinned="false" current-in-tab="false">
-        <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/xlwt/Row.py">
+      <file leaf-file-name="foundDataWidget.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AnalyseFounds/foundDataWidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="253" column="0" lean-forward="false" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
+            <state relative-caret-position="740">
+              <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="37" selection-end-line="69" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="generic.py" pinned="false" current-in-tab="false">
+        <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/core/generic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="387">
+              <caret line="1179" column="34" lean-forward="false" selection-start-line="1179" selection-start-column="30" selection-end-line="1179" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -39,7 +55,7 @@
       <file leaf-file-name="Worksheet.py" pinned="false" current-in-tab="false">
         <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/xlwt/Worksheet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
+            <state relative-caret-position="20539">
               <caret line="1087" column="0" lean-forward="false" selection-start-line="1087" selection-start-column="0" selection-end-line="1087" selection-end-column="0" />
               <folding />
             </state>
@@ -59,8 +75,18 @@
       <file leaf-file-name="base.py" pinned="false" current-in-tab="false">
         <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/indexes/base.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="39691">
+            <state relative-caret-position="529">
               <caret line="2142" column="31" lean-forward="false" selection-start-line="2142" selection-start-column="31" selection-end-line="2142" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.ini" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AnalyseFounds/config.ini">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="3" column="16" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -69,8 +95,8 @@
       <file leaf-file-name="parseFoundsJson.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1919">
-              <caret line="110" column="77" lean-forward="false" selection-start-line="110" selection-start-column="66" selection-end-line="110" selection-end-column="77" />
+            <state relative-caret-position="708">
+              <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -95,13 +121,11 @@
       <find>openFoundHistoryDataFile</find>
       <find>parsedFoundsData</find>
       <find>foundParamsSrcList</find>
-      <find>print</find>
       <find>print(line)</find>
       <find>showSelectedFoundData</find>
       <find>类型</find>
       <find>;</find>
       <find>csv</find>
-      <find>getNatualTimeAndValue</find>
       <find>showDataNetWorthTrend</find>
       <find>index_code</find>
       <find>js</find>
@@ -113,6 +137,11 @@
       <find>getCodeListFromSql</find>
       <find>累计定投资金</find>
       <find>理财定投资金</find>
+      <find>analyzeCusomerCodeList</find>
+      <find>print</find>
+      <find>getNatualTimeAndValue</find>
+      <find>开始下载基金数据</find>
+      <find>contentListGlobal</find>
     </findStrings>
     <replaceStrings>
       <replace>getNatualTimeAndValue</replace>
@@ -150,8 +179,8 @@
         <option value="$PROJECT_DIR$/test/testFound.py" />
         <option value="$PROJECT_DIR$/AnalyseFounds/SelectFoundForAnalyse.py" />
         <option value="$PROJECT_DIR$/AnalyseFounds/utils.py" />
-        <option value="$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py" />
         <option value="$PROJECT_DIR$/test/calcPeriodInvest.py" />
+        <option value="$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py" />
         <option value="$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py" />
       </list>
     </option>
@@ -178,6 +207,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -194,7 +224,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -459,7 +488,14 @@
       <option name="project" value="LOCAL" />
       <updated>1528731284208</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="finish AIP">
+      <created>1529119413301</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1529119413301</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -497,12 +533,10 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18283582" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18282403" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12846482" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3422222" sideWeight="0.25395152" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925472" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4077778" sideWeight="0.74604845" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31111112" sideWeight="0.74604845" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918552" sideWeight="0.4978746" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918552" sideWeight="0.4978746" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19336143" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -514,6 +548,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12846482" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32925472" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -559,7 +595,8 @@
     <MESSAGE value="add files" />
     <MESSAGE value="add new files and the analysis" />
     <MESSAGE value="add new feature" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new feature" />
+    <MESSAGE value="finish AIP" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish AIP" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -571,23 +608,18 @@
           <line>108</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py</url>
-          <line>232</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py</url>
-          <line>280</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="54" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>allFoundListTemp</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>df[['累计定投本金']].iloc[[-1],].values[0][0]</expression-string>
         <language-id>Python</language-id>
@@ -628,21 +660,9 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>df[['累计定投资金']].iloc[[-1],]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/nose/case.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="197" column="0" lean-forward="false" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AnalyseStock/Ui_AnalyseStocks.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
@@ -756,13 +776,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AnalyseFounds/foundDataWidget.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1007">
-          <caret line="55" column="45" lean-forward="false" selection-start-line="55" selection-start-column="45" selection-end-line="55" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/PyMySQL-0.7.11-py3.5.egg/pymysql/cursors.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -782,13 +795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
           <caret line="63" column="8" lean-forward="false" selection-start-line="63" selection-start-column="8" selection-end-line="63" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnalyseFounds/config.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -844,14 +850,6 @@
     <entry file="file://$PROJECT_DIR$/AnalyseFounds/000003.csv" />
     <entry file="file://$PROJECT_DIR$/AnalyseFounds/000002.csv" />
     <entry file="file://$PROJECT_DIR$/AnalyseFounds/000001.csv" />
-    <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/indexes/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39691">
-          <caret line="2142" column="31" lean-forward="false" selection-start-line="2142" selection-start-column="31" selection-end-line="2142" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/sh000001.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
@@ -866,26 +864,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1919">
-          <caret line="110" column="77" lean-forward="false" selection-start-line="110" selection-start-column="66" selection-end-line="110" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/io/parsers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11628">
           <caret line="645" column="0" lean-forward="false" selection-start-line="645" selection-start-column="0" selection-end-line="645" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/core/generic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="809">
-          <caret line="4215" column="0" lean-forward="false" selection-start-line="4215" selection-start-column="0" selection-end-line="4215" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -913,7 +895,7 @@
     </entry>
     <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/xlwt/Worksheet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
+        <state relative-caret-position="20539">
           <caret line="1087" column="0" lean-forward="false" selection-start-line="1087" selection-start-column="0" selection-end-line="1087" selection-end-column="0" />
           <folding />
         </state>
@@ -923,14 +905,61 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
           <caret line="253" column="0" lean-forward="false" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/indexes/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="529">
+          <caret line="2142" column="31" lean-forward="false" selection-start-line="2142" selection-start-column="31" selection-end-line="2142" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyseFounds/config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" column="16" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/zwPython/py35/python-3.5.3.amd64/Lib/site-packages/pandas/core/generic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="1179" column="34" lean-forward="false" selection-start-line="1179" selection-start-column="30" selection-end-line="1179" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyseFounds/parseFoundsJson.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="708">
+          <caret line="280" column="0" lean-forward="false" selection-start-line="280" selection-start-column="0" selection-end-line="280" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyseFounds/foundJsFile/0.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyseFounds/foundDataWidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="740">
+          <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="37" selection-end-line="69" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AnalyseFounds/AnalyseFounds.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="307" column="35" lean-forward="true" selection-start-line="307" selection-start-column="35" selection-end-line="307" selection-end-column="35" />
+        <state relative-caret-position="253">
+          <caret line="215" column="52" lean-forward="false" selection-start-line="215" selection-start-column="52" selection-end-line="215" selection-end-column="52" />
           <folding>
             <element signature="e#211#222#0" expanded="true" />
           </folding>

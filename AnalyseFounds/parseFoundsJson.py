@@ -192,7 +192,7 @@ class parseFoundsJsFile:
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = value
                                 else:
                                     if content.find('"') != -1:
-                                        print(content)
+                                        # print(content)
                                         content = eval(content)
                                     self.parsedFoundsData[self.foundParamsKeysDict[each]] = content
                                 continue

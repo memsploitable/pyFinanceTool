@@ -77,7 +77,10 @@ class WorkThreadGlobal(QThread):
                 if result:  # 链接数据库成功，开始解析基金列表
                     contentListGlobal.clear()
                     print('Open Mysql ok.')
-                    query = sql.QSqlQuery('select 代码,名称 from code_list')
+                    queryStr = str(
+                        'SELECT * FROM code_list WHERE 类型 IN(\'QDII\',\'混合型\',\'股票型\',\'股票指数\',\'QDII-指数\','
+                        '\'分级杠杆\',\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
+                    query = sql.QSqlQuery(queryStr)
                     query.first()
                     for i in range(query.size()):
                         content = str(query.value(0)) + ':' + str(query.value(1))
@@ -113,7 +116,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         self.saveFoundsDataToMySQL()
 
-        self.foundDataWidget.canvas.showFoundTrendData()
+        # self.foundDataWidget.canvas.showFoundTrendData()
 
     """
     Bellow functions for the Ui
@@ -125,8 +128,9 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.config = ConfigFileUseConfigParser()
         self.config.readConfigParams()
 
-        # self.getCodeListFromSql() #从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
-        self.analyzeCusomerCodeList()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+        self.getCodeListFromSql()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+
+        # self.analyzeCusomerCodeList()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
 
         self.pushSelectFoundButton.clicked.connect(self.selectFoundForAnlayse)
 
@@ -181,7 +185,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             if testCount == 10:
                 break
 
-            sleep(2)  # 不要短时间大并发下载远端数据
+            sleep(5)  # 不要短时间大并发下载远端数据
             code = each.split(':')[0]
             self.allFoundList.append(code)
             downLoader = DownLoadFoundsFiles()
@@ -201,22 +205,25 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         # 获得基金列表
         self.allFoundList = []
-        print("读取基金列表完毕...")
+
         allFoundListTemp = contentListGlobal.copy()
         # 按列表下载所有的基金js文件并解析
-        testCount = 3
+        testCount = len(allFoundListTemp)
+        print("读取基金列表完毕，总共：%s 只基金..." % testCount)
+        testCount = 0
         for each in allFoundListTemp:
 
-            if testCount == 10:
-                break
+            # if testCount == 10: TODO 下载第 554 只基金完毕
+            #     break
 
-            sleep(2)  # 不要短时间大并发下载远端数据
-            code = each.split(':')[0]
+            sleep(5)  # 不要短时间大并发下载远端数据
+            code = each.split(':')[1]  #获取基金号
             self.allFoundList.append(code)
             downLoader = DownLoadFoundsFiles()
             print('开始下载基金数据：%s' % code)
             downLoader.getFoundFile(self.configParams['foundDataSource'], code)  # 下载指定基金历史数据
             testCount += 1
+            print('下载第 %s 只基金完毕...' % testCount)
         self.parseAllFoundsDataToCsv(self.allFoundList)
 
     def parseAllFoundsDataToCsv(self, list):
@@ -505,7 +512,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             df = pd.DataFrame(json.load(fp), columns=['代码', '拼音简称', '名称', '类型', '名称拼音'])
             fp.close()
             engine = self.dbEngine.createEngine('foundation_code_Company')
-            df.to_sql('code_list', engine, if_exists='append')
+            df.to_sql('code_list', engine, if_exists='replace')
         except Exception as e:
             logging.error(e)
 
@@ -514,7 +521,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             df = pd.DataFrame(json.load(fp), columns=['代码', '公司名称'])
             fp.close()
             engine = self.dbEngine.createEngine('foundation_code_Company')
-            df.to_sql('company_list', engine, if_exists='append')
+            df.to_sql('company_list', engine, if_exists='replace')
         except Exception as e:
             logging.error(e)
 
