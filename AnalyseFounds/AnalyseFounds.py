@@ -78,7 +78,7 @@ class WorkThreadGlobal(QThread):
                     contentListGlobal.clear()
                     print('Open Mysql ok.')
                     queryStr = str(
-                        'SELECT * FROM code_list WHERE 类型 IN(\'QDII\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
+                        'SELECT * FROM code_list WHERE 类型 IN(\'QDII-指数\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
                     # queryStr = str(
                     #     'SELECT * FROM code_list WHERE 类型 IN(\'QDII\',\'混合型\',\'股票型\',\'股票指数\',\'QDII-指数\','
                     #     '\'分级杠杆\',\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
@@ -130,7 +130,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.config = ConfigFileUseConfigParser()
         self.config.readConfigParams()
 
-        # self.getCodeListFromSql()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+        self.getCodeListFromSql()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
 
         # self.analyzeCusomerCodeList()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
 
@@ -289,23 +289,34 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             investDays = ['first', 'median', 'last', 'min', 'max']
             investPeriod = '15D'  # 两周投一次
             investMoney = 1000
+            self.errFlag = False
+            totalCount = len(list)
+            count = 0
             for code in list:
-
+                count += 1
+                print('------->>总共： %s支基金，现在分析第：%s支' % (totalCount, count))
+                # code='001066'
                 roiList = []
                 # tmp = []
 
-                for each in investDays:
+                if self.errFlag:
+                    self.errFlag = False
+                    continue
 
+                for each in investDays:
+                    # self.errFlag = False
                     print('开始评估基金:%s的定投月份的%s 时间' % (code, each))
+
+                    df, start_date, end_date, flag = self.automatic_investment_plan(code, '', '', investMoney,
+                                                                                    'csvFile//',
+                                                                                    investPeriod, each)
+                    if flag == False:  # 处理对应的基金错误，跳过，继续处理剩下的基金
+                        self.errFlag = True
+                        break
+
                     sheet1.write(row, 0, code)
                     sheet1.write(row, 1, each)
                     sheet1.write(row, 2, investPeriod)
-
-                    df, start_date, end_date = self.automatic_investment_plan(code, '', '', investMoney, 'csvFile//',
-                                                                              investPeriod, each)
-                    if df == None:  # 处理对应的基金错误，跳过，继续处理剩下的基金
-                        continue
-
                     sheet1.write(row, 3, start_date.strftime('%Y-%m-%d'))
                     sheet1.write(row, 4, end_date.strftime('%Y-%m-%d'))
 
@@ -369,7 +380,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
                     row += 1
 
-                print(max(roiList))
+                    print(max(roiList))
 
             nowTime = datetime.datetime.now().strftime('%Y-%m-%d%H%M%S')
             fileName = 'result_%s.xls' % nowTime
@@ -389,6 +400,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         :param end_date: 结束定投的日期
         :return: 返回从定投到现在每天的资金和累计投入的资金
         """
+        overFlag = False
 
         fileName = os.path.join(os.path.abspath(fileDir), index_code + '.csv')
 
@@ -399,7 +411,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         if index_data.empty:
             print('文件：%s 数据为空，无法处理请检查' % fileName)
-            return None, None, None
+            return None, None, None, overFlag
 
         index_data = index_data[['value']].sort_index()
         # index_data = index_data[['index_code', 'value']].sort_index()
@@ -447,7 +459,8 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         # daily_data['基金定投本息'] = daily_data['value'] / 1000 * daily_data['总基金份额']
         daily_data['理财定投本息'] = daily_data['无风险收益_净值'] * daily_data['总理财份额']
 
-        return daily_data, start_date, end_date
+        overFlag = True
+        return daily_data, start_date, end_date, overFlag
 
     def selectFoundForAnlayse(self):
         # 加载基金列表选择对话框，选择所需要的基金
@@ -576,5 +589,5 @@ if __name__ == '__main__':
     mainWindow = AnalyseFounds()
     mainWindow.show()
 
-    mainWindow.analyseAllFoudsDataFromCsv(mainWindow.getCsvFileList())
+    # mainWindow.analyseAllFoudsDataFromCsv(mainWindow.getCsvFileList())
     sys.exit(app.exec_())
