@@ -66,6 +66,15 @@ class DownLoadFoundsFiles():
         except Exception as e:
             logging.error('download found file failed: %s' % fileUrl)
             logging.error(e)
+            # 再次尝试
+            time.sleep(4)
+            r = requests.get(fileUrl, stream=True)
+            f = open(filePath, "wb")
+            for chunk in r.iter_content(chunk_size=512):
+                if chunk:
+                    f.write(chunk)
+            f.close()
+
 
     def getFoundRealTimeDetaiFile(self, foundDataSource, foundCode):
 

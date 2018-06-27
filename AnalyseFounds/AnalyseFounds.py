@@ -78,7 +78,7 @@ class WorkThreadGlobal(QThread):
                     contentListGlobal.clear()
                     print('Open Mysql ok.')
                     queryStr = str(
-                        'SELECT * FROM code_list WHERE 类型 IN(\'QDII-指数\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
+                        'SELECT * FROM code_list WHERE 类型 IN(\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
                     # queryStr = str(
                     #     'SELECT * FROM code_list WHERE 类型 IN(\'QDII\',\'混合型\',\'股票型\',\'股票指数\',\'QDII-指数\','
                     #     '\'分级杠杆\',\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
