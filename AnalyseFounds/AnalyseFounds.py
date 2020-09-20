@@ -78,7 +78,7 @@ class WorkThreadGlobal(QThread):
                     contentListGlobal.clear()
                     print('Open Mysql ok.')
                     queryStr = str(
-                        'SELECT * FROM code_list WHERE 类型 IN(\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
+                        'SELECT * FROM code_list WHERE 类型 IN(\'股票型\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
                     # queryStr = str(
                     #     'SELECT * FROM code_list WHERE 类型 IN(\'QDII\',\'混合型\',\'股票型\',\'股票指数\',\'QDII-指数\','
                     #     '\'分级杠杆\',\'联接基金\')')  # 不要保本型、定开债券、理财型基金、货币型、其他创新、债券型
@@ -130,9 +130,14 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.config = ConfigFileUseConfigParser()
         self.config.readConfigParams()
 
-        self.getCodeListFromSql()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+        # self.getCodeListFromSql()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
 
-        # self.analyzeCusomerCodeList()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+        self.analyzeCusomerCodeList()  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
+
+        # codeList = ['486001', '241001', '160213', '110022', '540006', '163110', '041002', '201002', '150029', '450009',
+        #             '399011','110011','530015']
+        # quotaList = [400, 200, 400, 600, 300, 200, 200,200,200,200,400,400,200]
+        # self.analyzeFoundsPortfolioDataFromCsv(codeList, quotaList)  # 从基金代码数据库读取基金代码并下载基金数据，再进行定投分析
 
         self.pushSelectFoundButton.clicked.connect(self.selectFoundForAnlayse)
 
@@ -173,11 +178,12 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
     def analyzeCusomerCodeList(self):
 
-        # allFoundListTemp = ['110022', '110011', '001344', '110003', '000988', '519066', '000878', '070032', '000934',
-        #                     '160222', '570005', '486001',
-        #                     '070099', '160213', '486002', '000248', '000311', '000974', '001878', '000619', '161017',
-        #                     '519772', '001593', '377240', '519005', ]
-        allFoundListTemp = ['000457', '540012']
+        allFoundListTemp = ['110022', '110011', '001344', '110003', '000988', '519066', '000878', '070032', '000934',
+                            '160222', '570005', '486001',
+                            '070099', '160213', '486002', '000248', '000311', '000974', '001878', '000619', '161017',
+                            '519772', '001593', '377240', '519005', '000457', '540012']
+        # allFoundListTemp = ['110022']
+        # allFoundListTemp = ['000457', '540012']
         # 获得基金列表
         self.allFoundList = []
         # 按列表下载所有的基金js文件并解析
@@ -219,7 +225,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             #     break
 
             sleep(5)  # 不要短时间大并发下载远端数据
-            code = each.split(':')[1]  #获取基金号
+            code = each.split(':')[1]  # 获取基金号
             self.allFoundList.append(code)
             downLoader = DownLoadFoundsFiles()
             print('开始下载基金数据：%s' % code)
@@ -245,7 +251,6 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.analyseAllFoudsDataFromCsv(list)
 
     def getCsvFileList(self):
-
         csvFilesList = []
         curDir = './csvFile'
         try:
@@ -264,9 +269,7 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         return csvFilesList
 
-
     def analyseAllFoudsDataFromCsv(self, list):
-
         book = Workbook()
         try:
 
@@ -286,6 +289,8 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
             col = 0
             row = 1
+            start_date = ""
+            end_date = ""
             investDays = ['first', 'median', 'last', 'min', 'max']
             investPeriod = '15D'  # 两周投一次
             investMoney = 1000
@@ -307,9 +312,10 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
                     # self.errFlag = False
                     print('开始评估基金:%s的定投月份的%s 时间' % (code, each))
 
-                    df, start_date, end_date, flag = self.automatic_investment_plan(code, '', '', investMoney,
+                    df, start_date, end_date, flag = self.automatic_investment_plan(code, start_date, end_date,
+                                                                                    investMoney,
                                                                                     'csvFile//',
-                                                                                    investPeriod, each)
+                                                                                    investPeriod, each, 0)
                     if flag == False:  # 处理对应的基金错误，跳过，继续处理剩下的基金
                         self.errFlag = True
                         break
@@ -391,9 +397,138 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             fileName = 'result_%s.xls' % nowTime
             book.save(fileName)
 
+    def analyzeFoundsPortfolioDataFromCsv(self, codeList, quotaList):
+        book = Workbook()
+        try:
+
+            sheet1 = book.add_sheet('list')
+
+            # 写表头
+            title = ['基金号', '定投方式', '定投周期', '开始定投时间', '结束定投时间', '定投金额', '累计定投本金', '基金定投本息', '理财定投本息', '最差基准亏损',
+                     '最佳定投盈利',
+                     '基金定投收益',
+                     '理财产品收益', '到期基金净值涨幅', '理财定投收益率', '基金定投收益率', '定投时长（天）']
+
+            col = 0
+            for item in title:
+
+                sheet1.write(0, col, item)
+                col += 1
+
+            col = 0
+            row = 1
+            calcCount = 0
+            start_date = "2017-7-20"
+            end_date = "2018-7-20"
+            investDays = ['first', 'median', 'last', 'min', 'max']
+            investPeriod = '15D'  # 两周投一次
+            investMoney = 1000
+            self.errFlag = False
+            totalCount = len(codeList)
+            count = 0
+            periodDays = 1095
+            for code in codeList:
+                count += 1
+                print('------->>总共： %s支基金，现在分析第：%s支' % (totalCount, count))
+                # code='001066'
+                roiList = []
+                # tmp = []
+
+                if self.errFlag:
+                    self.errFlag = False
+                    continue
+
+                for each in investDays:
+                    # self.errFlag = False
+                    print('开始评估基金:%s的定投月份的%s 时间' % (code, each))
+                    print('money:%s' % quotaList[calcCount])
+                    df, start_date, end_date, flag = self.automatic_investment_plan(code, start_date, end_date,
+                                                                                    quotaList[calcCount],
+                                                                                    'csvFile//',
+                                                                                    investPeriod, each, periodDays)
+                    if flag == False:  # 处理对应的基金错误，跳过，继续处理剩下的基金
+                        self.errFlag = True
+                        break
+
+                    sheet1.write(row, 0, code)
+                    sheet1.write(row, 1, each)
+                    sheet1.write(row, 2, investPeriod)
+                    sheet1.write(row, 3, start_date.strftime('%Y-%m-%d'))
+                    sheet1.write(row, 4, end_date.strftime('%Y-%m-%d'))
+
+                    # 收益率统计
+                    print(df[['累计定投本金', '基金定投本息', '理财定投本息']].iloc[[0, -1],])
+                    print
+
+                    sheet1.write(row, 5, investMoney)
+                    sheet1.write(row, 6, int(df[['累计定投本金']].iloc[[-1],].values[0][0]))
+                    sheet1.write(row, 7, df[['基金定投本息']].iloc[[-1],].values[0][0])
+                    sheet1.write(row, 8, df[['理财定投本息']].iloc[[-1],].values[0][0])
+
+                    temp = (df['基金定投本息'] / df['理财定投本息'] - 1).sort_values()
+                    print("最差时基金定投相比于理财定投亏损: %.2f%%，日期为%s" % (temp.iloc[0] * 100, str(temp.index[0])))
+                    print("最好时基金定投相比于理财定投盈利: %.2f%%，日期为%s" % (temp.iloc[-1] * 100, str(temp.index[-1])))
+                    sheet1.write(row, 9, temp.iloc[0] * 100)
+                    sheet1.write(row, 10, temp.iloc[-1] * 100)
+
+                    tmp = df[['基金定投本息']].iloc[-1]['基金定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']
+                    print("到期基金定投收益: %.2f 元，日期为%s" % (
+                        tmp, str(temp.index[-1])))
+                    sheet1.write(row, 11, tmp)
+
+                    tmp = df[['理财定投本息']].iloc[-1]['理财定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']
+                    print("到期理财产品收益: %.2f 元，日期为%s" % (
+                        tmp, str(temp.index[-1])))
+                    sheet1.write(row, 12, tmp)
+
+                    tmp = ((df['value'][-1] - df['value'][0]) / df['value'][0]) * 100
+                    print(
+                        "到期基金净值涨幅： %.2f %% ，日期为%s" % (tmp
+                                                      , str(temp.index[-1])))
+
+                    sheet1.write(row, 13, '%.2f %%' % (tmp))
+
+                    tmp = '%.2f %%' % (((df[['理财定投本息']].iloc[-1]['理财定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']) /
+                                        df[['累计定投本金']].iloc[-1]['累计定投本金']) * 100)
+                    sheet1.write(row, 14, tmp)
+
+                    getROI = ((df[['基金定投本息']].iloc[-1]['基金定投本息'] - df[['累计定投本金']].iloc[-1]['累计定投本金']) /
+                              df[['累计定投本金']].iloc[-1]['累计定投本金']) * 100
+                    # tmp[each]=getROI
+
+                    roiList.append(getROI)
+
+                    days = str((end_date - start_date).days) + ' 交易日:%s' % periodDays
+                    print(
+                        "基金:%s 到期基金理财收益率： %.2f %% ，日期为%s ，累计投资时长: %s" % (code,
+                                                                         getROI, str(temp.index[-1]),
+                                                                         days))
+                    tmp = '%.2f %%' % getROI
+                    sheet1.write(row, 15, tmp)
+                    sheet1.write(row, 16, days)
+
+                    df[['基金定投本息', '理财定投本息']].plot(figsize=(12, 6))
+                    df['value'].plot(secondary_y=True)
+
+                    plt.legend([code + ' 基金净值'], loc='upper right')  # 绘制指数当天收盘点位
+                    # plt.legend(['上证基金指数'], loc='best') #绘制指数当天收盘点位
+                    # plt.show()
+
+                    row += 1
+
+                    print(max(roiList))
+                calcCount += 1
+            nowTime = datetime.datetime.now().strftime('%Y-%m-%d%H%M%S')
+            fileName = 'result_%s.xls' % nowTime
+            book.save(fileName)
+        except Exception as e:
+            print('Process error:%s , now save the temp file,please check.' % e)
+            nowTime = datetime.datetime.now().strftime('%Y-%m-%d%H%M%S')
+            fileName = 'result_%s.xls' % nowTime
+            book.save(fileName)
 
     def automatic_investment_plan(Self, index_code, start_date, end_date, periodMoney, fileDir='.', investPeriod='M',
-                                  investDay='first'):
+                                  investDay='first', periodDays=0):
         """
         :param index_code: 需要定投的指数代码
         :param start_date: 开始定投的日期
@@ -406,6 +541,12 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
 
         # fileName='E:\\MyProjects\\forPyqt\\pyFinanceTool\\AnalyseFounds\\csvFile\\001066.csv'
         # 读取指数数据，此处为csv文件的本地地址，请自行修改
+        if not os.path.exists(fileName):
+            print(fileName + " is not exits,please check your files!")
+            overFlag = False
+            daily_data = None
+            return daily_data, start_date, end_date, overFlag
+
         index_data = pd.read_csv(str(fileName),
                                  parse_dates=['date'], index_col=['date'])
 
@@ -421,6 +562,11 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
             start_date = index_data[['value']].index[0]
 
         if end_date == '':
+            end_date = index_data[['value']].index[-1]
+
+        if periodDays > 0:
+            size = index_data[['value']].size
+            start_date = index_data[['value']].index[size - periodDays]
             end_date = index_data[['value']].index[-1]
 
         index_data = index_data[start_date:end_date]  # 生成统计时间索引
@@ -476,7 +622,6 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         self.downLoadAndParseSelectedFoundData(code)
 
     def downLoadAndParseSelectedFoundData(self, code):
-
         downLoader = DownLoadFoundsFiles()
         downLoader.getFoundFile(self.configParams['foundDataSource'], code)  # 下载指定基金历史数据
 
@@ -561,7 +706,6 @@ class AnalyseFounds(QMainWindow, Ui_MainWindow):
         # downLoader.getFoundRealTimeDetaiFile(self.configParams['foundDataSource'], '001186')  # 下载指定基金实时数据
 
     def saveFoundsDataToMySQL(self):
-
         try:
             fp = open('foundsCodeList', 'r')
             df = pd.DataFrame(json.load(fp), columns=['代码', '拼音简称', '名称', '类型', '名称拼音'])
@@ -589,5 +733,7 @@ if __name__ == '__main__':
     mainWindow = AnalyseFounds()
     mainWindow.show()
 
-    # mainWindow.analyseAllFoudsDataFromCsv(mainWindow.getCsvFileList())
+    # mainWindow.analyzeFoundsPortfolioDataFromCsv(mainWindow.getCsvFileList())
+
+    # mainWindow.analyzeFoundsPortfolioDataFromCsv(codeList, quotaList)
     sys.exit(app.exec_())
